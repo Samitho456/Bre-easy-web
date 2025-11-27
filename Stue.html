@@ -8,6 +8,18 @@
     <title>Stue</title>
 </head>
 <body>
+    <nav class="navbar">
+      <a href="index.html" class="logo-link">
+          <img src="det_rigtige_logo-removebg-preview.png" alt="Logo" class="logo" height="80px">
+      </a>
+
+      <ul class="nav-links">
+          <li><a href="index.html">Hjem</a></li>
+          <li><a href="Stue.html">Stue</a></li>
+          <li><a href="#">Værelse</a></li>
+          <li><a href="#">Køkken</a></li>
+      </ul>
+    </nav>
     <div id="app">
       <div v-for="room in rooms.filter(r => r.name == 'Stue')" :key="room.id">
         <p class="container-title">{{ room.name }}</p>
