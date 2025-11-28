@@ -8,30 +8,60 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
-    <div id="app">
-      <div v-for="room in rooms" :key="room.id">
-        <p class="container-title">{{ room.name }}</p>
-        <div class="card-container">
-          <div
-            class="window-card"
-            v-for="window in room.windows"
-            :key="window.id"
-          >
-            <p class="card-title">{{ window.name }}</p>
-            <p class="window-status">
-              Status: {{ window.isOpen ? "Åbent" : "Lukket" }}
-            </p>
-            <button
-              :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
-              @click="window.isOpen = !window.isOpen"
-              class="toggle-open-status"
-            >
-              {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
-            </button>
-          </div>
+     <nav class="navbar">
+      <a href="index.html" class="logo-link">
+          <img src="det_rigtige_logo-removebg-preview.png" alt="Logo" class="logo">
+      </a>
+
+      <ul class="nav-links">
+          <li><a href="index.html">Hjem</a></li>
+          <li><a href="Stue.html">Stue</a></li>
+          <li><a href="#">Værelse</a></li>
+          <li><a href="#">Køkken</a></li>
+      </ul>
+    </nav>
+    <div>
+
+  <img src="det_rigtige_logo-removebg-preview.png" alt="Logo" class="center-logo" height="250px">
+
+  <div class="room-wrapper">
+
+    <div>
+      <div class="card-container">
+        <div class="window-card">
+          <h2>Stue</h2>
+          <a href="Stue.html">
+          <button class="green-button">Vælg</button>
+          </a>
         </div>
       </div>
     </div>
+
+    <div>
+      <div class="card-container">
+        <div class="window-card">
+          <h2>Værelse</h2>
+          <a>
+            <button class="green-button">Vælg</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card-container">
+        <div class="window-card">
+          <h2>Køkken</h2>
+          <a>
+            <button class="green-button">Vælg</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+</div>
+
     <script src="script.js"></script>
   </body>
 </html>
