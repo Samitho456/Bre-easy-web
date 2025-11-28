@@ -6,6 +6,24 @@ body {
   background-color: rgb(249, 251, 253);
 }
 
+.nav-button {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.nav-button:hover {
+  text-decoration: underline;
+}
+
+.nav-button-active {
+  background-color: lightgrey;
+  border-radius: 4px;
+}
+
 .container-title {
   text-align: center;
   font-weight: bold;
@@ -20,7 +38,6 @@ body {
   justify-content: center;
   margin-top: 0px;
   padding: 0px;
-  
 }
 
 .window-card {
@@ -30,7 +47,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 16px;
-  
+
   margin: 16px;
   width: 180px;
   height: 110px;
@@ -75,24 +92,24 @@ body {
   justify-content: space-between;
   padding: 10px 20px;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    height: 60px;
+  height: 60px;
 }
 
 .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
 }
 
 .nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-size: 18px;
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
 }
 
 .center-logo {
@@ -105,19 +122,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px; 
+  gap: 20px;
   margin-top: 20px;
 }
 
 .green-button {
   background-color: #28a745;
-  color: white;              
-  border: none;              
-  padding: 10px 20px;        
-  border-radius: 4px;        
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
 }
 
-@media (min-width: 768px){
+@media (min-width: 768px) {
   .room-wrapper {
     flex-direction: row;
     justify-content: center;
@@ -125,7 +142,7 @@ body {
   }
 
   .navbar {
-    flex-direction: row; 
+    flex-direction: row;
     justify-content: space-between;
   }
 }
