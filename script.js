@@ -44,15 +44,37 @@ Vue.createApp({
           console.log(
             window.name + " is now " + (window.isOpen ? "open" : "closed")
           );
-          // try {
-          //   fetch("http://localhost:5082/api/windows")
-          //     .then((response) => response.json())
-          //     .then((data) => {
-          //       console.log("Chuck Norris Joke:", data);
-          //     });
-          // } catch (error) {
-          //   console.error("Error fetching Chuck Norris joke:", error);
-          // }
+
+          if (window.isOpen) {
+            window.timeLastOpened = new Date().toISOString();
+          } else {
+            window.timeLastOpened = window.timeLastOpened;
+          }
+
+          const requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: window.id,
+              windowName: window.name,
+              locationId: window.roomId,
+              isOpen: !window.isOpen,
+              timeLastOpened: window.timeLastOpened,
+            }),
+          };
+
+          try {
+            fetch(
+              `http://localhost:5082/api/windows/${window.id}`,
+              requestOptions
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data);
+              });
+          } catch (error) {
+            console.error("Error fetching Chuck Norris joke:", error);
+          }
         }
       });
     },

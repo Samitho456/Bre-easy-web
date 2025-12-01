@@ -66,7 +66,7 @@
               </p>
               <button
                 :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
-                @click="window.isOpen = !window.isOpen"
+                @click="toggleWindow(window.id)"
                 class="toggle-open-status"
               >
                 {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
