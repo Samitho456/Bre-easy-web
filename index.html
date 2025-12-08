@@ -8,60 +8,74 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
-     <nav class="navbar">
-      <a href="index.html" class="logo-link">
-          <img src="det_rigtige_logo-removebg-preview.png" alt="Logo" class="logo">
-      </a>
+    <div id="app">
+      <!-- Navigation bar with logo and room selection buttons -->
+      <nav class="navbar">
+        <a href="index.html" class="logo-link">
+          <img src="BreEasy-Logo.png" alt="Logo" class="logo" />
+        </a>
+        <ul class="nav-links">
+          <li
+            v-for="room in rooms"
+            :key="room.id"
+            :class="{ 'nav-button-active': roomSelected == room.id }"
+          >
+            <button class="nav-button" @click="roomSelected = room.id">
+              {{ room.name }}
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-      <ul class="nav-links">
-          <li><a href="index.html">Hjem</a></li>
-          <li><a href="Stue.html">Stue</a></li>
-          <li><a href="#">Værelse</a></li>
-          <li><a href="#">Køkken</a></li>
-      </ul>
-    </nav>
-    <div>
+      <!-- Shows room selection if no room is selected -->
+      <div v-if="roomSelected == 0">
+        <img
+          src="BreEasy-Logo.png"
+          alt="Logo"
+          class="center-logo"
+          height="250px"
+        />
+        <div class="room-wrapper">
+          <div class="card-container" v-for="room in rooms" :key="room.id">
+            <div class="window-card">
+              <h2>{{ room.name }}</h2>
+              <button class="green-button" @click="roomSelected = room.id">
+                Vælg
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <img src="det_rigtige_logo-removebg-preview.png" alt="Logo" class="center-logo" height="250px">
-
-  <div class="room-wrapper">
-
-    <div>
-      <div class="card-container">
-        <div class="window-card">
-          <h2>Stue</h2>
-          <a href="Stue.html">
-          <button class="green-button">Vælg</button>
-          </a>
+      <!-- Shows windows in the selected room -->
+      <div v-else>
+        <div
+          v-for="room in rooms.filter(r => r.id == roomSelected)"
+          :key="room.id"
+        >
+          <p class="container-title">{{ room.name }}</p>
+          <div class="card-container">
+            <div
+              class="window-card"
+              v-for="window in windows.filter(w => w.roomId == room.id)"
+              :key="window.id"
+            >
+              <p class="card-title">{{ window.name }}</p>
+              <p class="window-status">
+                Status: {{ window.isOpen ? "Åbent" : "Lukket" }}
+              </p>
+              <button
+                :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
+                @click="toggleWindow(window.id)"
+                class="toggle-open-status"
+              >
+                {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div>
-      <div class="card-container">
-        <div class="window-card">
-          <h2>Værelse</h2>
-          <a>
-            <button class="green-button">Vælg</button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="card-container">
-        <div class="window-card">
-          <h2>Køkken</h2>
-          <a>
-            <button class="green-button">Vælg</button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div> 
-</div>
-
-    <script src="script.js"></script>
   </body>
+  <script src="script.js"></script>
 </html>
