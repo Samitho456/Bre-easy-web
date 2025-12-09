@@ -39,6 +39,8 @@
           <div class="card-container" v-for="room in rooms" :key="room.id">
             <div class="window-card">
               <h2>{{ room.name }}</h2>
+              <p>Humidity: {{ room.humidity }}%</p>
+
               <button class="green-button" @click="roomSelected = room.id">
                 Vælg
               </button>
