@@ -1,83 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vindue åbning</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="app">
-      <!-- Navigation bar with logo and room selection buttons -->
-      <nav class="navbar">
-        <a href="index.html" class="logo-link">
-          <img src="BreEasy-Logo.png" alt="Logo" class="logo" />
-        </a>
-        <ul class="nav-links">
-          <li
-            v-for="room in rooms"
-            :key="room.id"
-            :class="{ 'nav-button-active': roomSelected == room.id }"
-          >
-            <button class="nav-button" @click="roomSelected = room.id">
-              {{ room.name }}
-            </button>
-          </li>
-        </ul>
-      </nav>
+        <nav class="navbar">
+            <a href="index.html" class="logo-link">
+                <img src="BreEasy-Logo.png" alt="Logo" class="logo" />
+            </a>
+            <ul class="nav-links">
+                <li v-for="room in rooms"
+                    :key="room.id"
+                    :class="{ 'nav-button-active': roomSelected == room.id }">
+                    <button class="nav-button" @click="roomSelected = room.id">
+                        {{ room.name }}
+                    </button>
+                </li>
+            </ul>
+        </nav>
 
-      <!-- Shows room selection if no room is selected -->
-      <div v-if="roomSelected == 0">
-        <img
-          src="BreEasy-Logo.png"
-          alt="Logo"
-          class="center-logo"
-          height="250px"
-        />
-        <div class="room-wrapper">
-          <div class="card-container" v-for="room in rooms" :key="room.id">
-            <div class="window-card">
-              <h2>{{ room.name }}</h2>
-              <p>Humidity: {{ room.humidity }}%</p>
+        <div v-if="roomSelected == 0">
+            <img src="BreEasy-Logo.png"
+                 alt="Logo"
+                 class="center-logo"
+                 height="250px" />
+            <div class="room-wrapper">
+                <div class="card-container" v-for="room in rooms" :key="room.id">
+                    <div class="window-card">
+                        <h2>{{ room.name }}</h2>
+                        <p>Humidity: {{ room.humidity }}%</p>
 
-              <button class="green-button" @click="roomSelected = room.id">
-                Vælg
-              </button>
+                        <button class="green-button" @click="roomSelected = room.id">
+                            Vælg
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
 
-      <!-- Shows windows in the selected room -->
-      <div v-else>
-        <div
-          v-for="room in rooms.filter(r => r.id == roomSelected)"
-          :key="room.id"
-        >
-          <p class="container-title">{{ room.name }}</p>
-          <div class="card-container">
-            <div
-              class="window-card"
-              v-for="window in windows.filter(w => w.roomId == room.id)"
-              :key="window.id"
-            >
-              <p class="card-title">{{ window.name }}</p>
-              <p class="window-status">
-                Status: {{ window.isOpen ? "Åbent" : "Lukket" }}
-              </p>
-              <button
-                :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
-                @click="toggleWindow(window.id)"
-                class="toggle-open-status"
-              >
-                {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
-              </button>
+        <div v-else>
+            <div v-for="room in rooms.filter(r => r.id == roomSelected)"
+                 :key="room.id">
+                <p class="container-title">{{ room.name }}</p>
+                <p>Humidity: {{ room.humidity }}%</p>
+
+                <div class="settings-container">
+                    <h3>Vinduesindstillinger (Gælder for alle vinduer i rummet)</h3>
+                    <div>
+                        <label for="open-duration">Maks. åbningstid (minutter):</label>
+                        <input type="number"
+                               id="open-duration"
+                               v-model.number="maxOpenDuration"
+                               min="1"
+                               style="width: 70px; margin-left: 10px;" />
+                    </div>
+                    <div>
+                        <label for="max-temp">Maks. temperatur (°C):</label>
+                        <input type="number"
+                               id="max-temp"
+                               v-model.number="maxTemperature"
+                               min="10"
+                               max="40"
+                               style="width: 70px; margin-left: 10px;" />
+                    </div>
+                    <div>
+                        <label for="max-humidity">Maks. luftfugtighed (%):</label>
+                        <input type="number"
+                               id="max-humidity"
+                               v-model.number="maxHumidity"
+                               min="30"
+                               max="100"
+                               style="width: 70px; margin-left: 10px;" />
+                    </div>
+                </div>
+                <div class="card-container">
+                    <div class="window-card"
+                         v-for="window in windows.filter(w => w.roomId == room.id)"
+                         :key="window.id">
+                        <p class="card-title">{{ window.name }}</p>
+
+                        <p class="window-status">
+                            Status: {{ window.isOpen ? "Åbent" : "Lukket" }}
+                        </p>
+                        <button :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
+                                @click="toggleWindow(window.id)"
+                                class="toggle-open-status">
+                            {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </body>
-  <script src="script.js"></script>
+</body>
+<script src="script.js"></script>
 </html>

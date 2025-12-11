@@ -3,7 +3,11 @@ Vue.createApp({
         return {
             windows: [],
             rooms: [],
-            roomSelected: 0
+            roomSelected: 0,
+            // Nye datafelter for vinduesindstillinger
+            maxOpenDuration: 60, // Standard åbningstid i minutter
+            maxTemperature: 25, // Standard maks. temperatur
+            maxHumidity: 65, // Standard maks. luftfugtighed
         };
     },
 
@@ -33,6 +37,10 @@ Vue.createApp({
                             locationId: window.roomId,
                             isOpen: window.isOpen,
                             timeLastOpened: window.timeLastOpened,
+                            // Inkluderer de nye indstillinger i payloadet
+                            maxOpenDuration: this.maxOpenDuration,
+                            maxTemperature: this.maxTemperature,
+                            maxHumidity: this.maxHumidity,
                         }),
                     };
 
@@ -71,9 +79,21 @@ Vue.createApp({
                         roomId: window.locationId,
                         isOpen: window.isOpen,
                         timeLastOpened: window.timeLastOpened,
+                        // Tilføj pladsholderværdier for de nye indstillinger, 
+                        // indtil API'et understøtter dem
+                        maxOpenDuration: window.maxOpenDuration || this.maxOpenDuration,
+                        maxTemperature: window.maxTemperature || this.maxTemperature,
+                        maxHumidity: window.maxHumidity || this.maxHumidity,
                     }));
                 })
                 .catch((error) => console.error("Error fetching windows:", error));
         },
+
+        // ** (Valgfrit: Metode til at opdatere indstillingerne for et vindue - Kræver API support) **
+        /* updateWindowSettings(windowId) {
+            // Find vinduet og send PUT-anmodning til API'et med de opdaterede værdier.
+            // Denne logik skal implementeres, hvis du vil gemme ændringer i de nye inputfelter
+        }
+        */
     },
 }).mount("#app");
