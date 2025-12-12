@@ -4,10 +4,7 @@ Vue.createApp({
             windows: [],
             rooms: [],
             roomSelected: 0,
-            // Nye datafelter for vinduesindstillinger
-            maxOpenDuration: 60, // Standard åbningstid i minutter
-            maxTemperature: 25, // Standard maks. temperatur
-            maxHumidity: 65, // Standard maks. luftfugtighed
+            // isMobileMenuOpen er ikke nÃ¸dvendig her, da Bootstrap hÃ¥ndterer dropdown-tilstanden via JS
         };
     },
 
@@ -18,10 +15,40 @@ Vue.createApp({
     },
 
     methods: {
+        // Opdaterer indstillingerne for et specifikt rum (kaldes fra HTML @change)
+        updateRoomSettings(room) {
+            const requestOptions = {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: room.id,
+                    locationName: room.name,
+                    humidity: room.humidity,
+                    maxOpenDuration: room.maxOpenDuration,
+                    maxTemperature: room.maxTemperature,
+                    maxHumidity: room.maxHumidity,
+                }),
+            };
+
+            fetch(`https://breeasy.azurewebsites.net/api/Locations/${room.id}`, requestOptions)
+                .then((response) => response.json())
+                .then((data) => console.log("Settings updated successfully for room:", data))
+                .catch((error) => console.error("Error updating room settings:", error));
+        },
+
         // Toggle window open/closed state
         toggleWindow(windowId) {
             this.windows.forEach((window) => {
                 if (window.id === windowId) {
+                    
+                    // Find de aktuelle indstillinger for det pÃ¥gÃ¦ldende rum
+                    const currentRoom = this.rooms.find(r => r.id === window.roomId);
+
+                    if (!currentRoom) {
+                        console.error(`Room with ID ${window.roomId} not found.`);
+                        return;
+                    }
+
                     window.isOpen = !window.isOpen;
 
                     if (window.isOpen) {
@@ -37,10 +64,10 @@ Vue.createApp({
                             locationId: window.roomId,
                             isOpen: window.isOpen,
                             timeLastOpened: window.timeLastOpened,
-                            // Inkluderer de nye indstillinger i payloadet
-                            maxOpenDuration: this.maxOpenDuration,
-                            maxTemperature: this.maxTemperature,
-                            maxHumidity: this.maxHumidity,
+                            // Inkluderer de rums-specifikke indstillinger i payloadet
+                            maxOpenDuration: currentRoom.maxOpenDuration,
+                            maxTemperature: currentRoom.maxTemperature,
+                            maxHumidity: currentRoom.maxHumidity,
                         }),
                     };
 
@@ -59,10 +86,15 @@ Vue.createApp({
             fetch("https://breeasy.azurewebsites.net/api/Locations")
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log("Fetched rooms:", data);
                     this.rooms = data.map((room) => ({
                         id: room.id,
                         name: room.locationName ?? room.LocationName,
                         humidity: room.humidity ?? room.Humidity,
+                        temperature: room.temperature ?? room.temperature,
+                        maxOpenDuration: room.maxOpenDuration || 60,
+                        maxTemperature: room.maxTemperature || 25,
+                        maxHumidity: room.maxHumidity || 65,
                     }));
                 })
                 .catch((error) => console.error("Error fetching rooms:", error));
@@ -79,21 +111,11 @@ Vue.createApp({
                         roomId: window.locationId,
                         isOpen: window.isOpen,
                         timeLastOpened: window.timeLastOpened,
-                        // Tilføj pladsholderværdier for de nye indstillinger, 
-                        // indtil API'et understøtter dem
-                        maxOpenDuration: window.maxOpenDuration || this.maxOpenDuration,
-                        maxTemperature: window.maxTemperature || this.maxTemperature,
-                        maxHumidity: window.maxHumidity || this.maxHumidity,
+                        // Vi behÃ¸ver ikke gemme indstillingerne pÃ¥ vinduet her, 
+                        // da de hentes fra RUMMET i toggleWindow()
                     }));
                 })
                 .catch((error) => console.error("Error fetching windows:", error));
         },
-
-        // ** (Valgfrit: Metode til at opdatere indstillingerne for et vindue - Kræver API support) **
-        /* updateWindowSettings(windowId) {
-            // Find vinduet og send PUT-anmodning til API'et med de opdaterede værdier.
-            // Denne logik skal implementeres, hvis du vil gemme ændringer i de nye inputfelter
-        }
-        */
     },
 }).mount("#app");

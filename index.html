@@ -1,102 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vindue åbning</title>
+    <meta desctiption="BreEasy - Smart vindues&aring;bning baseret p&aring; luftfugtighed og temperatur." />
+    <title>Vindue &Aring;bning - BreEasy</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="styles.css" />
+    
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar">
-            <a href="index.html" class="logo-link">
-                <img src="BreEasy-Logo.png" alt="Logo" class="logo" />
+        
+        <nav class="navbar navbar-light bg-light shadow-sm navbar-expand-lg px-3">
+            <a href="#" class="navbar-brand me-auto" @click.prevent="roomSelected = 0">
+                <img src="BreEasy-Logo.png" alt="Logo" height="35" class="d-inline-block align-middle">
             </a>
-            <ul class="nav-links">
-                <li v-for="room in rooms"
-                    :key="room.id"
-                    :class="{ 'nav-button-active': roomSelected == room.id }">
-                    <button class="nav-button" @click="roomSelected = room.id">
-                        {{ room.name }}
-                    </button>
-                </li>
-            </ul>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-2">
+                    <li class="nav-item" v-for="room in rooms" :key="room.id">
+                        <button 
+                            class="nav-link btn btn-link text-decoration-none px-3" 
+                            :class="{ 'nav-link-active': roomSelected == room.id }" 
+                            @click="roomSelected = room.id"
+                        >
+                            {{ room.name }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
-        <div v-if="roomSelected == 0">
-            <img src="BreEasy-Logo.png"
-                 alt="Logo"
-                 class="center-logo"
-                 height="250px" />
-            <div class="room-wrapper">
-                <div class="card-container" v-for="room in rooms" :key="room.id">
-                    <div class="window-card">
-                        <h2>{{ room.name }}</h2>
-                        <p>Humidity: {{ room.humidity }}%</p>
-
-                        <button class="green-button" @click="roomSelected = room.id">
-                            Vælg
-                        </button>
+        <div class="container my-5">
+            <div v-if="roomSelected == 0">
+                <div class="text-center mb-5">
+                    <img src="BreEasy-Logo.png" alt="BreEasy Logo" height="150" class="img-fluid center-main-logo" />
+                </div>
+                
+                <div class="row justify-content-center g-4">
+                    <div class="col-12 col-md-6 col-lg-2" v-for="room in rooms" :key="room.id">
+                        <div class="card shadow-sm text-center h-100 window-card-home">
+                            <div class="card-body py-4 d-flex flex-column justify-content-between">
+                                <h2 class="card-title fs-5 fw-bold">{{ room.name }}</h2>
+                                <p class="card-text text-muted small">Humidity: {{ room.humidity }}%</p>
+                                
+                                <button class="btn green-button" @click="roomSelected = room.id">
+                                    Vælg
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div v-else>
-            <div v-for="room in rooms.filter(r => r.id == roomSelected)"
-                 :key="room.id">
-                <p class="container-title">{{ room.name }}</p>
-                <p>Humidity: {{ room.humidity }}%</p>
+            <div v-else>
+                <div v-for="room in rooms.filter(r => r.id == roomSelected)" :key="room.id">
+                    <h1 class="text-center mb-0 container-title">{{ room.name }}</h1>
+                    <p class="text-center fs-5 text-muted" style="margin: 20px 0 0 0;">Luft fugtighed: {{ room.humidity }}%</p>
+                    <p class="text-center fs-5 text-muted">Temperatur: {{ room.temperature }}C</p>
 
-                <div class="settings-container">
-                    <h3>Vinduesindstillinger (Gælder for alle vinduer i rummet)</h3>
-                    <div>
-                        <label for="open-duration">Maks. åbningstid (minutter):</label>
+                    <div class="settings-container p-4 mb-4 bg-white shadow-sm rounded mx-auto text-center">
+
+                    <h3 class="fs-5 mb-3">Vinduesindstillinger (Gælder for alle vinduer i rummet)</h3>
+
+                    <div 
+                        v-for="room in rooms.filter(r => r.id == roomSelected)" 
+                        :key="room.id"
+                        style="
+                            display: flex;
+                            justify-content: center;
+                            gap: 2.5rem;
+                            padding: 0 2rem;
+                        "
+                    >
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <label for="open-duration">Max &Aring;bningstid (Minutter.)</label>
+                            <input type="number"
+                                id="open-duration"
+                                v-model.number="room.maxOpenDuration"
+                                @change="updateRoomSettings(room)"
+                                min="1"
+                                class="form-control text-center"
+                                style="width: 120px;"
+                            />
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <label for="max-temp">Max temperatur (°C)</label>
+                            <input type="number"
+                                id="max-temp"
+                                v-model.number="room.maxTemperature"
+                                @change="updateRoomSettings(room)"
+                                min="10"
+                                max="40"
+                                class="form-control text-center"
+                                style="width: 120px;"
+                            />
+                        </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <label for="max-humidity">Max fugtighed (%)</label>
                         <input type="number"
-                               id="open-duration"
-                               v-model.number="maxOpenDuration"
-                               min="1"
-                               style="width: 70px; margin-left: 10px;" />
+                            id="max-humidity"
+                            v-model.number="room.maxHumidity"
+                            @change="updateRoomSettings(room)"
+                            min="30"
+                            max="100"
+                            class="form-control text-center"
+                            style="width: 120px;"
+                        />
                     </div>
-                    <div>
-                        <label for="max-temp">Maks. temperatur (°C):</label>
-                        <input type="number"
-                               id="max-temp"
-                               v-model.number="maxTemperature"
-                               min="10"
-                               max="40"
-                               style="width: 70px; margin-left: 10px;" />
-                    </div>
-                    <div>
-                        <label for="max-humidity">Maks. luftfugtighed (%):</label>
-                        <input type="number"
-                               id="max-humidity"
-                               v-model.number="maxHumidity"
-                               min="30"
-                               max="100"
-                               style="width: 70px; margin-left: 10px;" />
-                    </div>
+
                 </div>
-                <div class="card-container">
-                    <div class="window-card"
-                         v-for="window in windows.filter(w => w.roomId == room.id)"
-                         :key="window.id">
-                        <p class="card-title">{{ window.name }}</p>
+            </div>
 
-                        <p class="window-status">
-                            Status: {{ window.isOpen ? "Åbent" : "Lukket" }}
-                        </p>
-                        <button :style="{ backgroundColor: window.isOpen ? '#dc3545' : '#28a745' }"
-                                @click="toggleWindow(window.id)"
-                                class="toggle-open-status">
-                            {{ window.isOpen ? "Luk vindue" : "Åbn vindue" }}
-                        </button>
+
+                    <div class="row justify-content-center g-4 mt-3">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" 
+                             v-for="window in windows.filter(w => w.roomId == room.id)" 
+                             :key="window.id">
+                            
+                            <div class="card shadow-sm text-center h-100 window-card-detail">
+                                <div class="card-body py-4 d-flex flex-column justify-content-between">
+                                    <p class="card-title fw-bold fs-5">{{ window.name }}</p>
+
+                                    <p class="text-muted small window-status">
+                                        Status: {{ window.isOpen ? "&Aring;ben" : "Lukket" }}
+                                    </p>
+                                    
+                                    <button 
+                                        :class="['btn', window.isOpen ? 'btn-danger' : 'btn-success']"
+                                        @click="toggleWindow(window.id)"
+                                        class="toggle-open-status"
+                                    >
+                                        {{ window.isOpen ? "Luk vindue" : "&Aring;ben vindue" }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
